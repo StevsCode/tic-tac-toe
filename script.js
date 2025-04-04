@@ -31,6 +31,7 @@ function GameController() {
 
     function switchTurn() {
         currentPlayer = (currentPlayer.symbol === "X") ? Player("O") : Player("X");
+        updateTurnDisplay();
     }
 
     function makeMove(index) {
@@ -41,8 +42,9 @@ function GameController() {
             if (winner) {
                 console.log(winner === "Tie" ? "It's a tie!" : `${winner} wins!`);
                 gameOver = true;
+                updateTurnDisplay(winner);
             } else {
-                switchTurn(); 
+                switchTurn();
             }
         }
     }
@@ -50,76 +52,73 @@ function GameController() {
     function checkWinner() {
         const board = Gameboard.getBoard();
 
-        for (let i = 0; i < 3; i++) {
-            if (board[i * 3] && board[i * 3] === board[i * 3 + 1] && board[i * 3 + 1] === board[i * 3 + 2]) {
-                return board[i * 3]; 
-            }
-        }
-        
-        for (let i = 0; i < 3; i++) {
-            if (board[i] && board[i] === board[i + 3] && board[i + 3] === board[i + 6]) {
-                return board[i];
-            }
-        }
+        const winningCombinations = [
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8],
+            [0, 3, 6],
+            [1, 4, 7],
+            [2, 5, 8],
+            [0, 4, 8],
+            [2, 4, 6]
+        ];
 
-        if (board[0] && board[0] === board[4] && board[4] === board[8]) {
-            return board[0]; 
-        }
-        if (board[2] && board[2] === board[4] && board[4] === board[6]) {
-            return board[2]; 
+        for (let combination of winningCombinations) {
+            const [a, b, c] = combination;
+            if (board[a] !== "" && board[a] === board[b] && board[a] === board[c]) {
+                return board[a];
+            }
         }
 
         if (!board.includes("")) {
             return "Tie";
         }
 
-        return null; 
+        return null;
     }
 
-    return { makeMove, resetGame: Gameboard.resetBoard };
+    function updateTurnDisplay(winner = null) {
+        const turnDisplay = document.querySelector('.turn');
+        if (winner) {
+            if (winner === "Tie") {
+                turnDisplay.textContent = "It's a tie!";
+            } else {
+                turnDisplay.textContent = `${winner} wins!`;
+            }
+        } else {
+            turnDisplay.textContent = `It's ${currentPlayer.symbol}'s turn!`;
+        }
+    }
+
+    function resetGame() {
+        gameOver = false;
+        Gameboard.resetBoard();
+        renderBoard();
+        updateTurnDisplay();
+    }
+
+    return { makeMove, resetGame, checkWinner };
 }
 
 function renderBoard() {
-    const valori = Gameboard.getBoard();
+    const board = Gameboard.getBoard();
     const cells = document.querySelectorAll(".game > div");
-    
-    for (let i = 0; i < valori.length; i++) {
-        cells[i].textContent = valori[i];
+
+    for (let i = 0; i < board.length; i++) {
+        cells[i].textContent = board[i];
 
         cells[i].addEventListener("click", function() {
-            if (valori[i] === "") {
-                makeMove(i);
+            if (board[i] === "" && !gameController.gameOver) {
+                gameController.makeMove(i);
                 renderBoard();
-                switchTurn();
             }
         });
     }
 }
 
-function checkWinner() {
-    const board = Gameboard.getBoard();
-    
-    const winningCombinations = [
-        [0, 1, 2],
-        [3, 4, 5],
-        [6, 7, 8],
-        [0, 3, 6],
-        [1, 4, 7],
-        [2, 5, 8],
-        [0, 4, 8],
-        [2, 4, 6]
-    ];
+document.getElementById('restart').addEventListener('click', function() {
+    gameController.resetGame();
+});
 
-    for (let combination of winningCombinations) {
-        const [a, b, c] = combination;
-        if (board[a] !== "" && board[a] === board[b] && board[a] === board[c]) {
-            return board[a];
-        }
-    }
-
-    if (!board.includes("")) {
-        return "Tie";
-    }
-
-    return null;
-}
+const gameController = GameController();
+renderBoard();
