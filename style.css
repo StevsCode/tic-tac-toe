@@ -5,7 +5,7 @@ body {
     height: 100vh;
     font-family: 'Risque', Times, serif;
     font-weight: 800;
-    font-size: 8vw;
+    font-size: 8vh;
     color: whitesmoke;
     background-color: lightgray;
 }
@@ -32,7 +32,7 @@ body {
 
 button {
     padding: 10px 20px;
-    font-size: 3vw;
+    font-size: 3vh;
     font-family: 'Risque', Times, serif;
     font-weight: 600;
     background-color: #000080;
@@ -49,8 +49,8 @@ button:hover {
 
 .game {
     display: grid;
-    grid-template-rows: repeat(3, 15vw);
-    grid-template-columns: repeat(3, 15vw);
+    grid-template-rows: repeat(3, 15vh);
+    grid-template-columns: repeat(3, 15vh);
     border: solid black 2px;
 }
 
@@ -59,7 +59,7 @@ button:hover {
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 6vw;
+    font-size: 6vh;
     font-weight: bold;
     color: #000080;
 }
@@ -67,7 +67,7 @@ button:hover {
 .turn {
     font-family: 'Risque', Times, serif;
     font-weight: 400;
-    font-size: 4vw;
+    font-size: 4vh;
     color: #000080;
     margin: 15px;
 }
