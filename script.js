@@ -78,3 +78,20 @@ function GameController() {
 
     return { makeMove, resetGame: Gameboard.resetBoard };
 }
+
+function renderBoard() {
+    const valori = Gameboard.getBoard();
+    const cells = document.querySelectorAll(".game > div");
+    
+    for (let i = 0; i < valori.length; i++) {
+        cells[i].textContent = valori[i];
+
+        cells[i].addEventListener("click", function() {
+            if (valori[i] === "") {
+                makeMove(i);
+                renderBoard();
+                switchTurn();
+            }
+        });
+    }
+}
